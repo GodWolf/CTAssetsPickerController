@@ -511,12 +511,41 @@ NSString * const CTAssetsPickerDidDeselectAssetNotification = @"CTAssetsPickerDi
 {
     [self insertObject:asset inSelectedAssetsAtIndex:self.countOfSelectedAssets];
     [self postDidSelectAssetNotification:asset];
+    [self resetDoneTitle];
 }
 
 - (void)deselectAsset:(PHAsset *)asset
 {
     [self removeObjectFromSelectedAssetsAtIndex:[self.selectedAssets indexOfObject:asset]];
     [self postDidDeselectAssetNotification:asset];
+    [self resetDoneTitle];
+}
+
+#pragma mark - 重新设置done
+- (void)resetDoneTitle {
+    
+    UIViewController *vc = self.childSplitViewController.viewControllers.firstObject;
+    
+    if ([vc isKindOfClass:[UINavigationController class]])
+    {
+        
+        for (UIViewController *viewController in ((UINavigationController *)vc).viewControllers) {
+            
+            UIBarButtonItem *oldDoneItem = viewController.navigationItem.rightBarButtonItem;
+            
+            viewController.navigationItem.rightBarButtonItem =
+            [[UIBarButtonItem alloc] initWithTitle:self.doneButtonTitle
+                                             style:oldDoneItem.style
+                                            target:oldDoneItem.target
+                                            action:oldDoneItem.action];
+        }
+    }
+}
+
+- (NSString *)doneButtonTitle {
+    
+    _doneButtonTitle = [NSString stringWithFormat:@"%@ (%ld/%ld)",CTAssetsPickerLocalizedString(@"Done", nil),self.selectedAssets.count,9];
+    return _doneButtonTitle;
 }
 
 
