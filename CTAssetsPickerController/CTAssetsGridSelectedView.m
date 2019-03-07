@@ -70,6 +70,8 @@
     [self addSubview:checkmark];
     
     CTAssetSelectionLabel *selectionIndexLabel = [CTAssetSelectionLabel newAutoLayoutView];
+    [selectionIndexLabel setCornerRadius:CTAssetLabelSize.height/2];
+    selectionIndexLabel.borderWidth = 1;
     self.selectionIndexLabel = selectionIndexLabel;
     
     [self addSubview:self.selectionIndexLabel];
